@@ -1,7 +1,12 @@
 <ion-view view-title="{{langue.name}}">
-  <ion-content class="padding">
-    <p>
-      {{langue.name}}
-    </p>
+  <ion-content class="">
+      <ion-list>
+          <ion-item class="item-icon-right" ng-repeat="lesson in lessons" type="item-text-wrap" href="#/tab/langues/{{langue.id}}/{{lesson.id}}">
+              <h2>Jour {{lesson.id}}</h2>
+
+              <i ng-if="!lesson.isValid" class="icon ion-chevron-right icon-accessory"></i>
+              <i ng-if="lesson.isValid" class="icon ion-checkmark icon-accessory"></i>
+          </ion-item>
+      </ion-list>
   </ion-content>
 </ion-view>

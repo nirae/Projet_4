@@ -9,6 +9,7 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
+
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -19,6 +20,9 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
+        }
+        if (ionic.Platform.isWebView()) {
+
         }
     });
 })
@@ -40,85 +44,104 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
             var auth = $firebaseAuth();
             auth.$onAuthStateChanged(function(user) {
                 if (user) {
-                    var url = 'https://test-91a0b.firebaseio.com/user/' + user.uid + '/dates.json';
+                    /*var url = 'https://test-91a0b.firebaseio.com/user/' + user.uid + '/dates.json';
                     $http.get(url).success(function(data) {
-                        for (var i = 1; i < data.length; i++) {
-                            var date = Date.parse(data[i]);
-                            cordova.plugins.notification.local.schedule({
-                                id: i,
-                                title: 'Rappel',
-                                text: 'N\'oubliez pas votre formationn dans une heure!'
-                            }).then(function(res) {
-                                console.log('Notif envoyée');
-                            });
-                            console.log(date);
-                        }
-                    });
-                } else {
-                    $state.go('login');
-                }
+                    for (var i = 1; i < data.length; i++) {
+                    var date = Date.parse(data[i]);
+                    cordova.plugins.notification.local.schedule({
+                    id: i,
+                    title: 'Rappel',
+                    text: 'N\'oubliez pas votre formationn dans une heure!'
+                }).then(function(res) {
+                console.log('Notif envoyée');
             });
+            console.log(date);
         }
-    })
+    });*/
+} else {
+    $state.go('login');
+}
+});
+}
+})
 
-    // Each tab has its own nav history stack:
+// Each tab has its own nav history stack:
 
-    .state('tab.hours', {
-        url: '/hours',
-        views: {
-            'tab-hours': {
-                templateUrl: 'templates/tab-hours.html',
-                controller: 'HoursCtrl'
-            }
+.state('tab.hours', {
+    url: '/hours',
+    views: {
+        'tab-hours': {
+            templateUrl: 'templates/tab-hours.html',
+            controller: 'HoursCtrl'
         }
-    })
+    }
+})
 
-    .state('tab.langues', {
-        url: '/langues',
-        views: {
-            'tab-langues': {
-                templateUrl: 'templates/tab-langues.html',
-                controller: 'LanguesCtrl'
-            }
+.state('tab.langues', {
+    url: '/langues',
+    views: {
+        'tab-langues': {
+            templateUrl: 'templates/tab-langues.html',
+            controller: 'LanguesCtrl'
         }
-    })
-    .state('tab.langues-detail', {
-        url: '/langues/:langueId',
-        views: {
-            'tab-langues': {
-                templateUrl: 'templates/mini-cours.html',
-                controller: 'MiniCoursCtrl'
-            }
+    }
+})
+.state('tab.langues-detail', {
+    url: '/langues/:langueId',
+    views: {
+        'tab-langues': {
+            templateUrl: 'templates/mini-cours.html',
+            controller: 'MiniCoursCtrl'
         }
-    })
-
-    .state('tab.contact', {
-        url: '/contact',
-        views: {
-            'tab-contact': {
-                templateUrl: 'templates/tab-contact.html',
-                controller: 'ContactCtrl'
-            }
+    }
+})
+.state('tab.langues-lesson', {
+    url: '/langues/:langueId/:lessonId',
+    views: {
+        'tab-langues': {
+            templateUrl: 'templates/lesson.html',
+            controller: 'LessonCtrl'
         }
-    })
+    }
+})
 
-    .state('tab.logout', {
-        url: '/logout',
-        views: {
-            'tab-logout': {
-                templateUrl: 'templates/logout.html',
-                controller: 'LogoutCtrl'
-            }
+.state('tab.langues-quiz', {
+    url: '/langues/:langueId/:lessonId/quiz',
+    views: {
+        'tab-langues': {
+            templateUrl: 'templates/quiz.html',
+            controller: 'QuizCtrl'
         }
-    })
+    }
+})
 
-    .state('login', {
-        url: '/login',
-        templateUrl: 'templates/login.html',
-        controller: 'LoginCtrl'
-    });
+.state('tab.contact', {
+    url: '/contact',
+    views: {
+        'tab-contact': {
+            templateUrl: 'templates/tab-contact.html',
+            controller: 'ContactCtrl'
+        }
+    }
+})
 
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tab/hours');
+.state('tab.logout', {
+    url: '/logout',
+    views: {
+        'tab-logout': {
+            templateUrl: 'templates/logout.html',
+            controller: 'LogoutCtrl'
+        }
+    }
+})
+
+.state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+});
+
+// if none of the above states are matched, use this as the fallback
+$urlRouterProvider.otherwise('/tab/hours');
 
 });
