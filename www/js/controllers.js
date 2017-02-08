@@ -9,6 +9,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
         if (user) {
             // Récupération de la bdd
             database.ref('/user/' + user.uid).once('value').then(function(data) {
+
                 $scope.dates = [];
                 // Formate la date selon nos besoins
                 for (var i = 1; i < data.val().dates.length; i++) {
@@ -30,6 +31,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 }
 
                 $scope.rappel = function() {
+                    console.log($scope.rappel.checked);
                     // Si le bouton est activé
                     if ($scope.rappel.checked) {
                         // Déclaration des options
@@ -89,6 +91,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                         // Vibration
                         $cordovaVibration.vibrate(100);
                         alert('Rappels supprimés du calendrier');
+                        database.ref('/user/' + user.uid + '/rappel').set(false);
                     }
                 }
             });
@@ -145,6 +148,13 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
     $scope.auth.$onAuthStateChanged(function(user) {
         if(user) {
             $scope.langueId = $stateParams.langueId;
+            // Récupère la dernière leçon de l'utilisateur
+            database.ref('/user/' + user.uid + '/lastLesson' + $stateParams.langueId).once('value').then(function(data) {
+                lastLesson = data.val();
+                if ($stateParams.lessonId <= lastLesson) {
+                    $scope.validate = true;
+                }
+            });
             // Récupère le cours correspondant
             database.ref('/langues/' + $stateParams.langueId + '/lessons/' + $stateParams.lessonId).once('value').then(function(data) {
 
@@ -172,7 +182,64 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 lastLesson = data.val();
             });
 
-            $scope.lessonId = $stateParams.lessonId;
+            var testReps = [];
+            database.ref('/langues/' + $stateParams.langueId + '/lessons').once('value').then(function(data) {
+
+                $scope.exercises = [
+                    data.val()[$stateParams.lessonId][1],
+                    data.val()[$stateParams.lessonId][2],
+                    data.val()[$stateParams.lessonId][3]
+                ];
+
+                if ($stateParams.lessonId > 1) {
+                    $scope.exercises.push(data.val()[$stateParams.lessonId - 1][1]);
+                }
+
+                /*if ($stateParams.lessonId == 1) {
+                    //console.log(data.val()[$stateParams.lessonId]);
+                    $scope.exercises = [
+                        data.val()[$stateParams.lessonId][1],
+                        data.val()[$stateParams.lessonId][2],
+                        data.val()[$stateParams.lessonId][3]
+                    ];
+                    console.log($scope.exercises);
+                } else {
+                    //console.log(data.val()[$stateParams.lessonId]);
+                    //console.log(data.val()[$stateParams.lessonId - 1]);
+                    $scope.exercises = [
+                        data.val()[$stateParams.lessonId - 1][1],
+                        data.val()[$stateParams.lessonId][1],
+                        data.val()[$stateParams.lessonId][2],
+                        data.val()[$stateParams.lessonId][3]
+                    ];
+                    console.log($scope.exercises);
+                }*/
+
+                for (var i = 0; i < $scope.exercises.length; i++) {
+                    testReps.push($scope.exercises[i]);
+                }
+            });
+
+            $scope.repQuiz = function() {
+                $scope.valids = 0;
+                for (var i = 0; i < $scope.exercises.length; i++) {
+                    if ($scope.exercises[i].formData.toLowerCase() == testReps[i].exercise.toLowerCase()) {
+                        $scope.exercises[i].isValid = true;
+                        console.log('OK');
+                        $scope.valids++;
+                    } else {
+                        console.log('pas OK');
+                        $scope.exercises[i].isValid = false;
+                    }
+                }
+
+                if ($scope.valids === $scope.exercises.length) {
+                    database.ref('/user/' + user.uid + '/lastLesson' + $stateParams.langueId).set(parseInt($stateParams.lessonId));
+                    console.log('tout est bon');
+                    $state.go('tab.langues-detail', {langueId: $stateParams.langueId});
+
+                }
+            };
 
         } else {
             $state.go('login');

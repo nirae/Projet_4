@@ -5,6 +5,6 @@
                 <p>"{{e.exercise}}" se dit : "{{e.traduction}}"</p>
             </ion-item>
         </ion-list>
-        <a class="button button-block button-positive" href="#/tab/langues/{{langueId}}/{{lessonId}}/quiz">Je suis prêt pour le quiz!</a>
+        <a ng-if="!validate" class="button button-block button-positive" href="#/tab/langues/{{langueId}}/{{lessonId}}/quiz">Je suis prêt pour le quiz!</a>
     </ion-content>
 </ion-view>
