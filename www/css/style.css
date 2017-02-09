@@ -1,1 +1,78 @@
 /* Empty. Add your own CSS if you like */
+
+ion-content {
+    background: #008891;
+    color: #fff !important;
+}
+
+ion-tabs.tabs-color-active-positive .tab-item.tab-item-active,
+ion-tabs.tabs-color-active-positive .tab-item.active,
+ion-tabs.tabs-color-active-positive .tab-item.activated {
+    color: #00587A !important;
+    border-color: #00587A !important;
+}
+
+.bouton-contact .button-positive {
+    background: #00587A !important;
+}
+
+.button-positive {
+    background: #CDCBA6 !important;
+}
+
+.button-login {
+    background: #00587A !important;
+}
+
+.item {
+    color: #444 !important;
+}
+
+.name {
+    color: #fff !important;
+    margin-top: 20px !important;
+    text-align: center;
+}
+
+.icon-contact {
+    font-size: 40px;
+}
+
+.astuce {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+
+.exercise {
+    margin-bottom: 20px !important;
+}
+
+.ion-close {
+    margin-top: 10px;
+    color: #C62828 !important;
+}
+
+.ion-checkmark {
+    margin-top: 10px;
+    color: #8BC34A !important;
+}
+
+.bloc-logo {
+    margin-top: 20px !important;
+    height: 35vh;
+    width: 35vh;
+    background: #fff;
+    margin: auto;
+    border-radius: 20vh;
+    text-align: center;
+}
+
+.bloc-logo img {
+    width: 80%;
+    margin-top: 30px;
+}

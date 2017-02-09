@@ -1,22 +1,23 @@
-<ion-view view-title="Login">
+<ion-view view-title="">
         <ion-content class="has-header padding">
-
+            <h3 class="name">Bienvenue sur l'application Multilingua</h3>
+            <div class="bloc-logo">
+                <img src="img/icon.png" alt="">
+            </div>
             <form name="loginForm" class="list card no-margin" ng-submit="login(data)">
-
                 <ion-input class="item item-input item-stacked-label" >
                     <ion-label >Email</ion-label>
-                    <input type="email" name="email" placeholder="Email..." ng-model="data.email">
+                    <input type="email" name="email" placeholder="" ng-model="data.email">
                 </ion-input>
 
                 <ion-input class="item item-input item-stacked-label" >
                     <ion-label >Mot de passe</ion-label>
-                    <input type="password" name="password" placeholder="Password..." ng-model="data.password">
+                    <input type="password" name="password" placeholder="" ng-model="data.password">
                 </ion-input>
 
                 <ion-input class="item-input padding">
-                    <button class="button button-block button-positive" type="submit">Connexion</button>
+                    <button class="button button-block button-positive button-login" type="submit">Connexion</button>
                 </ion-input>
             </form>
-
         </ion-content>
 </ion-view>

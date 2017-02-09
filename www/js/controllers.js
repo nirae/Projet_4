@@ -1,15 +1,35 @@
 angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
 
-.controller('HoursCtrl', function($state, $scope, $cordovaVibration, $firebase, $firebaseAuth, $http) {
+.controller('EducationCtrl', function($state, $scope, $cordovaVibration, $firebase, $firebaseAuth, $http, $cordovaEmailComposer) {
 
     $scope.auth = $firebaseAuth();
-
     $scope.auth.$onAuthStateChanged(function(user) {
-
+        // Si l'utilisateur est bien connecté
         if (user) {
             // Récupération de la bdd
             database.ref('/user/' + user.uid).once('value').then(function(data) {
+                // Récupération de l'user
+                $scope.user = data.val();
+                // Récupération du responsable
+                $scope.teacher = data.val().responsable;
+                // Création de l'email de contact
+                $scope.sendEmail = function() {
+                    $cordovaEmailComposer.isAvailable().then(function() {
+                        // Création de l'email
+                        var email = {
+                            to: data.val().responsable.email,
+                            isHtml: true,
+                            subject: 'Formation ' + data.val().name + ' ' + data.val().firstName
+                        }
+                        // Ouverture via l'app email
+                        $cordovaEmailComposer.open(email);
+                    }, function() {
+                        // En cas d'erreur
+                        alert("Impossible d'envoyer un email");
+                    });
+                };
 
+                // Création du tableau contenant toutes les dates de formation
                 $scope.dates = [];
                 // Formate la date selon nos besoins
                 for (var i = 1; i < data.val().dates.length; i++) {
@@ -32,19 +52,18 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                     $scope.dates.push(date);
                 }
 
-                $scope.rappel = function(id) {
-                    console.log(id);
-                    console.log($scope.rappel[id].checked);
+                $scope.rappel = function(date) {
+                    var id = date.id;
                     // Si le bouton est activé
-                    if ($scope.rappel[id].checked) {
+                    if (date.checked) {
                         // Déclaration des options
                         var calOptions = window.plugins.calendar.getCalendarOptions();
                         // Rappel une heure avant
                         calOptions.firstReminderMinutes = 60;
 
-                        var startDate = new Date(data.val().dates[id]);
+                        var startDate = new Date(data.val().dates[id].date);
                         startDate.setHours(startDate.getHours() - 1);
-                        var endDate = new Date(data.val().dates[id]);
+                        var endDate = new Date(data.val().dates[id].date);
 
                         window.plugins.calendar.createEventWithOptions(
                             'Rappel formation',
@@ -53,12 +72,8 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                             startDate,
                             endDate,
                             calOptions,
-                            function(success) {
-                                alert("ok : " + success);
-                            },
-                            function(err) {
-                                alert("pas ok : " + err);
-                            }
+                            function(success) {},
+                            function(err) {}
                         );
 
                         // Vibration
@@ -66,25 +81,19 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                         database.ref('/user/' + user.uid + '/dates/' + id + '/rappel').set(true);
                         alert('Rappel ajouté au calendrier');
                         // Si non
-                    } else if (!$scope.rappel[id].checked) {
-
-                        var startDate = new Date(data.val().dates[id]);
+                    } else if (!date.checked) {
+                        var startDate = new Date(data.val().dates[id].date);
                         startDate.setHours(startDate.getHours() - 1);
-                        var endDate = new Date(data.val().dates[id]);
+                        var endDate = new Date(data.val().dates[id].date);
 
-                        window.plugins.calendar.createEventWithOptions(
+                        window.plugins.calendar.deleteEvent(
                             'Rappel formation',
                             'Multilingua',
                             'N\'oubliez pas votre rendez vous de formation!',
                             startDate,
                             endDate,
-                            calOptions,
-                            function(success) {
-                                alert("ok : " + success);
-                            },
-                            function(err) {
-                                alert("pas ok : " + err);
-                            }
+                            function(success) {},
+                            function(err) {}
                         );
 
                         // Vibration
@@ -93,6 +102,18 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                         database.ref('/user/' + user.uid + '/dates/' + id + '/rappel').set(false);
                     }
                 }
+
+                // Bouton déconnexion
+                $scope.logout = function() {
+                    $scope.auth.$signOut().then(function() {
+                        console.log('déconnecté');
+                        // Success
+                    }, function(err) {
+                        console.log(err);
+                    });
+                };
+
+                $scope.$apply();
             });
         } else {
             $state.go('login');
@@ -113,11 +134,11 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
     });
 })
 
-.controller('MiniCoursCtrl', function($scope, $state, $stateParams, $http, $firebaseAuth) {
+.controller('LangueDetailCtrl', function($scope, $state, $stateParams, $http, $firebaseAuth) {
     $scope.auth = $firebaseAuth();
 
     $scope.auth.$onAuthStateChanged(function(user) {
-        if(user) {
+        if (user) {
             // Récupère le dernier cours fait
             var lastLesson;
             database.ref('/user/' + user.uid + '/lastLesson' + $stateParams.langueId).once('value').then(function(data) {
@@ -129,6 +150,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 $scope.langue = data.val();
                 var lessons = data.val().lessons;
                 $scope.lessons = [];
+
                 for (var i = 1; i <= lastLesson + 1; i++) {
                     if (i <= lastLesson) {
                         lessons[i].isValid = true;
@@ -193,7 +215,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 if ($stateParams.lessonId > 1) {
                     $scope.exercises.push(data.val()[$stateParams.lessonId - 1][1]);
                 }
-                
+
                 for (var i = 0; i < $scope.exercises.length; i++) {
                     testReps.push($scope.exercises[i]);
                 }
@@ -226,36 +248,6 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
     });
 })
 
-.controller('ContactCtrl', function($scope, $state, $cordovaEmailComposer, $firebaseAuth, $http) {
-    $scope.auth = $firebaseAuth();
-    $scope.auth.$onAuthStateChanged(function(user) {
-        if (user) {
-            var url = 'https://test-91a0b.firebaseio.com/user/' + user.uid + '.json';
-            $http.get(url).success(function(data) {
-                $scope.myuser = data
-            });
-        } else {
-            $state.go('login');
-        }
-    });
-
-    $scope.sendEmail = function() {
-
-        $cordovaEmailComposer.isAvailable().then(function() {
-            var email = {
-                to: $scope.myuser.responsable.email,
-                isHtml: true,
-                subject: 'Formation ' + $scope.myuser.name + ' ' + $scope.myuser.firstName + ' - '
-            }
-
-            $cordovaEmailComposer.open(email);
-        }, function() {
-
-            alert("Impossible d'envoyer un email");
-        });
-    };
-})
-
 .controller('LoginCtrl', function($scope, $state, $firebaseAuth) {
 
     $scope.login = function(data) {
@@ -263,7 +255,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
 
         $scope.auth.$signInWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {
             console.log('Signed in as : ', firebaseUser.uid);
-            $state.go('tab.hours');
+            $state.go('tab.education');
         }).catch(function(err) {
             alert('Erreur d\'authentification');
             console.error('Authentication failed : ', err);
@@ -272,15 +264,32 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
 
 })
 
-.controller('LogoutCtrl', function($scope, $firebaseAuth) {
+.controller('AccountCtrl', function($state, $scope, $firebaseAuth) {
 
-    $scope.logout = function() {
-        $scope.auth = $firebaseAuth();
-        $scope.auth.$signOut().then(function() {
-            console.log('déconnecté');
-            // Success
-        }, function(err) {
-            console.log(err);
-        });
-    };
+    // Récupère l'user courant
+    $scope.auth = $firebaseAuth();
+    $scope.auth.$onAuthStateChanged(function(user) {
+        // Si l'utilisateur est bien connecté
+        if (user) {
+            database.ref('/user/' + user.uid).once('value').then(function(data) {
+
+                $scope.user = data.val();
+
+                // Bouton déconnexion
+                $scope.logout = function() {
+
+                    $scope.auth.$signOut().then(function() {
+                        console.log('déconnecté');
+                        // Success
+                    }, function(err) {
+                        console.log(err);
+                    });
+                };
+
+                $scope.$apply();
+            });
+        } else {
+            $state.go('login');
+        }
+    });
 });

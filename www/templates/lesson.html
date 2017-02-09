@@ -1,10 +1,17 @@
 <ion-view view-title="Jour {{lessonId}}" cache-view="false">
-    <ion-content class="">
-        <ion-list class="">
-            <ion-item class="item-icon-right item" ng-repeat="e in exercises" >
-                <p>"{{e.exercise}}" se dit : "{{e.traduction}}"</p>
-            </ion-item>
-        </ion-list>
-        <a ng-if="!validate" class="button button-block button-positive" href="#/tab/langues/{{langueId}}/{{lessonId}}/quiz">Je suis prêt pour le quiz !</a>
+    <ion-content class="padding">
+        <h3 ng-if="validate" class="name">Vous avez réussi ce cours !</h3>
+        <h4 class="name" ng-if="!validate">Retenez bien ces expressions</h4>
+        <div class="list card">
+            <div class="item-text-wrap item-icon-right item" ng-repeat="e in exercises">
+                <h2 class="text-center exercise">
+                    {{e.exercise}}
+                </h2>
+                <h2 class="text-center">
+                    {{e.traduction}}
+                </h2>
+            </div>
+        </div>
+        <a ng-if="!validate" class="button button-block button-positive" href="#/tab/langues/{{langueId}}/{{lessonId}}/quiz">Prêt(e) pour le quiz !</a>
     </ion-content>
 </ion-view>

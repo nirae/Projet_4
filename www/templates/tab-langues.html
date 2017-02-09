@@ -1,10 +1,13 @@
 <ion-view view-title="Langues">
     <ion-content>
-        <ion-list>
-            <ion-item class="item-icon-right" ng-repeat="langue in langues" type="item-text-wrap" href="#/tab/langues/{{langue.id}}">
-                <h2>{{langue.name}}</h2>
-                <i class="icon ion-chevron-right icon-accessory"></i>
-            </ion-item>
-        </ion-list>
+        <h3 class="name">Choix de la langue</h3>
+        <div class="list card">
+            <div ng-repeat="langue in langues" class="item">
+                <a href="#/tab/langues/{{langue.id}}" class="item item-icon-right">
+                    {{langue.name}}
+                    <i class="icon ion-chevron-right icon-accessory"></i>
+                </a>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
