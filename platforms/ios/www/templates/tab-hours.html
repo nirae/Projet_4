@@ -1,0 +1,15 @@
+<ion-view view-title="Dates">
+    <ion-content class="">
+        <ion-toggle ng-model="rappel.checked"
+                    ng-checked="check"
+                    ng-change="rappel()">
+                    Rappel
+        </ion-toggle>
+        <p>Cliquez pour ajouter les dates au rappel de votre calendrier</p>
+        <ion-list class="list list-inset">
+            <ion-item class="item-icon-right item" ng-repeat="date in dates" type="item-text-wrap">
+                <h2>Le {{date.day}}/{{date.month}}/{{date.year}} à {{date.hour}}:{{date.minutes}}</h2>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

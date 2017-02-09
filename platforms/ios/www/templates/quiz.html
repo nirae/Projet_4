@@ -1,0 +1,21 @@
+<ion-view view-title="Quiz jour {{ lessonId }}">
+    <ion-content class="">
+        <form name="quizForm" ng-submit="repQuiz()">
+            <h4>Trouvez la traduction des expressions suivantes</h4>
+            <div class="list card no-margin" ng-repeat="e in exercises">
+                <ion-input class="item item-input item-stacked-label" >
+                    <ion-label class="item-icon-right">
+                        "{{ e.traduction }}"
+                        <i ng-if="e.isValid == false" class="icon ion-close icon-accessory"></i>
+                        <i ng-if="e.isValid" class="icon ion-checkmark icon-accessory"></i>
+                    </ion-label>
+                    <input type="text" name="rep{{$index}}" ng-model="e.formData">
+
+                </ion-input>
+            </div>
+            <ion-input class="item-input padding">
+                <button class="button button-block button-positive" type="submit">Valider!</button>
+            </ion-input>
+        </form>
+    </ion-content>
+</ion-view>

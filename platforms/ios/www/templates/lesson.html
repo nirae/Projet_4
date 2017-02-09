@@ -1,0 +1,10 @@
+<ion-view view-title="Jour {{lessonId}}">
+    <ion-content class="">
+        <ion-list class="">
+            <ion-item class="item-icon-right item" ng-repeat="e in exercises" >
+                <p>"{{e.exercise}}" se dit : "{{e.traduction}}"</p>
+            </ion-item>
+        </ion-list>
+        <a ng-if="!validate" class="button button-block button-positive" href="#/tab/langues/{{langueId}}/{{lessonId}}/quiz">Je suis prêt pour le quiz!</a>
+    </ion-content>
+</ion-view>

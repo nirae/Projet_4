@@ -1,0 +1,12 @@
+<ion-view view-title="{{langue.name}}" cache-view="false">
+  <ion-content class="">
+      <ion-list>
+          <ion-item class="item-icon-right" ng-repeat="l in lessons" type="item-text-wrap" href="#/tab/langues/{{langue.id}}/{{l.id}}">
+              <h2>Jour {{l.id}}</h2>
+
+              <i ng-if="!l.isValid" class="icon ion-chevron-right icon-accessory"></i>
+              <i ng-if="l.isValid" class="icon ion-checkmark icon-accessory"></i>
+          </ion-item>
+      </ion-list>
+  </ion-content>
+</ion-view>
