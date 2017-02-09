@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
 
-.controller('HoursCtrl', function($scope, $cordovaVibration, $firebase, $firebaseAuth, $http) {
+.controller('HoursCtrl', function($state, $scope, $cordovaVibration, $firebase, $firebaseAuth, $http) {
 
     $scope.auth = $firebaseAuth();
 
