@@ -13,13 +13,15 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 $scope.dates = [];
                 // Formate la date selon nos besoins
                 for (var i = 1; i < data.val().dates.length; i++) {
-                    d = new Date(data.val().dates[i]);
+                    d = new Date(data.val().dates[i].date);
                     var date = {
                         day: (d.getDate()).toString(),
                         month: (d.getMonth() + 1).toString(),
                         year: (d.getFullYear()).toString(),
                         hour: (d.getHours() - 1).toString(),
-                        minutes: (d.getMinutes()).toString()
+                        minutes: (d.getMinutes()).toString(),
+                        id: data.val().dates[i].id,
+                        checked: data.val().dates[i].rappel
                     };
                     if (date.minutes == 0) {
                         date.minutes = '00';
@@ -30,68 +32,65 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                     $scope.dates.push(date);
                 }
 
-                $scope.rappel = function() {
-                    console.log($scope.rappel.checked);
+                $scope.rappel = function(id) {
+                    console.log(id);
+                    console.log($scope.rappel[id].checked);
                     // Si le bouton est activé
-                    if ($scope.rappel.checked) {
+                    if ($scope.rappel[id].checked) {
                         // Déclaration des options
                         var calOptions = window.plugins.calendar.getCalendarOptions();
+                        // Rappel une heure avant
                         calOptions.firstReminderMinutes = 60;
-                        // Pour chaque date
-                        for (var i = 1; i < data.val().dates.length; i++) {
 
-                            var startDate = new Date(data.val().dates[i]);
-                            startDate.setHours(startDate.getHours() - 1);
-                            var endDate = new Date(data.val().dates[i]);
-                            // Création d'un rappel dans le calendrier
-                            console.log(window.plugins.calendar);
-                            window.plugins.calendar.createEventWithOptions(
-                                'Rappel formation',
-                                'Multilingua',
-                                'N\'oubliez pas votre rendez vous de formation!',
-                                startDate,
-                                endDate,
-                                calOptions,
-                                function(success) {
-                                    alert("ok : " + success);
-                                },
-                                function(err) {
-                                    alert("pas ok : " + err);
-                                }
-                            );
-                        }
+                        var startDate = new Date(data.val().dates[id]);
+                        startDate.setHours(startDate.getHours() - 1);
+                        var endDate = new Date(data.val().dates[id]);
+
+                        window.plugins.calendar.createEventWithOptions(
+                            'Rappel formation',
+                            'Multilingua',
+                            'N\'oubliez pas votre rendez vous de formation!',
+                            startDate,
+                            endDate,
+                            calOptions,
+                            function(success) {
+                                alert("ok : " + success);
+                            },
+                            function(err) {
+                                alert("pas ok : " + err);
+                            }
+                        );
+
                         // Vibration
                         $cordovaVibration.vibrate(100);
-                        alert('Rappels ajoutés au calendrier');
-                        database.ref('/user/' + user.uid + '/rappel').set(true);
-
+                        database.ref('/user/' + user.uid + '/dates/' + id + '/rappel').set(true);
+                        alert('Rappel ajouté au calendrier');
                         // Si non
-                    } else if (!$scope.rappel.checked) {
-                        // Pour chaque date
-                        for (var i = 1; i < data.val().dates.length; i++) {
+                    } else if (!$scope.rappel[id].checked) {
 
-                            var startDate = new Date(data.val().dates[i]);
-                            startDate.setHours(startDate.getHours() - 1);
-                            var endDate = new Date(data.val().dates[i]);
-                            // On retire du calendrier
-                            window.plugins.calendar.deleteEvent(
-                                'Rappel',
-                                'Multilingua',
-                                'N\'oubliez pas votre rendez vous de formation!',
-                                startDate,
-                                endDate,
-                                function(success) {
-                                    alert("ok : " + success);
-                                },
-                                function(err) {
-                                    alert("pas ok : " + err);
-                                }
-                            );
-                        }
+                        var startDate = new Date(data.val().dates[id]);
+                        startDate.setHours(startDate.getHours() - 1);
+                        var endDate = new Date(data.val().dates[id]);
+
+                        window.plugins.calendar.createEventWithOptions(
+                            'Rappel formation',
+                            'Multilingua',
+                            'N\'oubliez pas votre rendez vous de formation!',
+                            startDate,
+                            endDate,
+                            calOptions,
+                            function(success) {
+                                alert("ok : " + success);
+                            },
+                            function(err) {
+                                alert("pas ok : " + err);
+                            }
+                        );
+
                         // Vibration
                         $cordovaVibration.vibrate(100);
-                        alert('Rappels supprimés du calendrier');
-                        database.ref('/user/' + user.uid + '/rappel').set(false);
+                        alert('Rappel supprimé du calendrier');
+                        database.ref('/user/' + user.uid + '/dates/' + id + '/rappel').set(false);
                     }
                 }
             });
@@ -194,27 +193,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                 if ($stateParams.lessonId > 1) {
                     $scope.exercises.push(data.val()[$stateParams.lessonId - 1][1]);
                 }
-
-                /*if ($stateParams.lessonId == 1) {
-                    //console.log(data.val()[$stateParams.lessonId]);
-                    $scope.exercises = [
-                        data.val()[$stateParams.lessonId][1],
-                        data.val()[$stateParams.lessonId][2],
-                        data.val()[$stateParams.lessonId][3]
-                    ];
-                    console.log($scope.exercises);
-                } else {
-                    //console.log(data.val()[$stateParams.lessonId]);
-                    //console.log(data.val()[$stateParams.lessonId - 1]);
-                    $scope.exercises = [
-                        data.val()[$stateParams.lessonId - 1][1],
-                        data.val()[$stateParams.lessonId][1],
-                        data.val()[$stateParams.lessonId][2],
-                        data.val()[$stateParams.lessonId][3]
-                    ];
-                    console.log($scope.exercises);
-                }*/
-
+                
                 for (var i = 0; i < $scope.exercises.length; i++) {
                     testReps.push($scope.exercises[i]);
                 }
