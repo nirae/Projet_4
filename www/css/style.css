@@ -71,3 +71,22 @@ ion-tabs.tabs-color-active-positive .tab-item.activated {
     width: 80%;
     margin-top: 30px;
 }
+
+.bloc-langues {
+    margin-bottom: 40px;
+}
+
+.bloc-logo-educ {
+    margin-top: 20px !important;
+    height: 100px;
+    width: 100px;
+    background: #fff;
+    margin: auto;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.bloc-logo-educ img {
+    width: 80%;
+    margin-top: 12px;
+}

@@ -1,13 +1,16 @@
 <ion-view view-title="Mini-cours">
     <ion-content>
         <h3 class="name">Choix de la langue</h3>
-        <div class="list card">
+        <div class="list card bloc-langues">
             <div ng-repeat="langue in langues" class="item">
                 <a href="#/tab/langues/{{langue.id}}" class="item item-icon-right">
                     {{langue.name}}
                     <i class="icon ion-chevron-right icon-accessory"></i>
                 </a>
             </div>
+        </div>
+        <div class="bloc-logo">
+            <img src="img/icon.png" alt="">
         </div>
     </ion-content>
 </ion-view>

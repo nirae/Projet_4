@@ -30,13 +30,17 @@
                 <ion-toggle ng-model="date.checked"
                 ng-change="rappel(date)">
                 Le {{date.day}}/{{date.month}}/{{date.year}} à {{date.hour}}:{{date.minutes}}
-                </ion-toggle>
-            </div>
+            </ion-toggle>
         </div>
-        <p class="padding astuce">Astuce : cliquez sur le bouton à côté des dates pour les ajouter au rappel de votre calendrier</p>
+    </div>
+    <p class="padding astuce">Astuce : cliquez sur le bouton à côté des dates pour les ajouter au rappel de votre calendrier</p>
 
-        <div class="logout padding">
-            <button class="button button-block button-positive icon-right ion-log-out" ng-click="logout()">Déconnexion</button>
-        </div>
-    </ion-content>
+    <div class="logout padding">
+        <button class="button button-block button-positive icon-right ion-log-out" ng-click="logout()">Déconnexion</button>
+    </div>
+    <div class="bloc-logo-educ">
+        <img class="" src="img/icon.png" alt="">
+    </div>
+    <p class="padding astuce">Copyright 2017 © | Multilingua</p>
+</ion-content>
 </ion-view>

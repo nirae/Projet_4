@@ -100,16 +100,6 @@ angular.module('starter', ['ionic', 'firebase', 'starter.controllers', 'starter.
         }
     })
 
-    .state('tab.account', {
-        url: '/account',
-        views: {
-            'tab-account': {
-                templateUrl: 'templates/account.html',
-                controller: 'AccountCtrl'
-            }
-        }
-    })
-
     .state('login', {
         url: '/login',
         templateUrl: 'templates/login.html',
