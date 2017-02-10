@@ -4,11 +4,12 @@
         <h4 class="name" ng-if="!validate">Retenez bien ces expressions</h4>
         <div class="list card">
             <div class="item-text-wrap item-icon-right item" ng-repeat="e in exercises">
-                <h2 class="text-center exercise">
-                    {{e.exercise}}
-                </h2>
                 <h2 class="text-center">
                     {{e.traduction}}
+                </h2>
+                <p class="text-center">=</p>
+                <h2 class="text-center">
+                    {{e.exercise}}
                 </h2>
             </div>
         </div>

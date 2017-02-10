@@ -121,15 +121,25 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
     });
 })
 
-.controller('LanguesCtrl', function($scope, $http) {
+.controller('LanguesCtrl', function($scope, $http, $state, $firebaseAuth) {
 
-    var url = 'https://test-91a0b.firebaseio.com/langues.json';
-    $scope.langues = [];
-    $http.get(url).success(function(data) {
-        console.log(data);
-        for (var i = 1; i < data.length; i++) {
-            var langue = {name: data[i].name, id: data[i].id};
-            $scope.langues.push(langue);
+    $scope.auth = $firebaseAuth();
+
+    $scope.auth.$onAuthStateChanged(function(user) {
+        if (user) {
+
+            database.ref('langues').once('value').then(function(data) {
+
+                $scope.langues = [];
+                for (var i = 1; i < data.val().length; i++) {
+                    var langue = {name: data.val()[i].name, id: data.val()[i].id};
+                    $scope.langues.push(langue);
+                }
+                $scope.$apply();
+            });
+
+        } else {
+            $state.go('login');
         }
     });
 })
@@ -157,6 +167,7 @@ angular.module('starter.controllers', ['firebase', 'ionic', 'ngCordova'])
                     }
                     $scope.lessons.push(lessons[i]);
                 }
+                $scope.$apply();
             });
         } else {
             $state.go('login');
